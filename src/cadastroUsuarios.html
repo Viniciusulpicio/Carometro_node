@@ -19,7 +19,7 @@
     <div class="formBody_forms cadastro">
         <h1>Faça seu cadastro aqui!</h1>
 
-        <form action="login.html">
+        <form id="cadastroUsuarioForm">
             <label for="nome">Nome: </label>
             <input type="text" name="nome" placeholder="Insira seu nome aqui">
 
@@ -85,5 +85,33 @@
 </div>
 <script src="./js/script.js"></script>
 </body>
+
+<script src="./js/script.js">
+    document.getElementById('cadastroUsuarioForm').addEventListener('submit',
+        async function (event){
+            event.preventDefault(); // evita o comportamento padrão do formulário
+            const formData = new FormData(document.getElementById('cadastroUsuarioForm'));
+            let json = {}
+            formData.forEach((value, key) => {json[key] = value});
+            try{
+                const response = await fetch ('/cadastro', {
+                    method: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(json) // converte o objeto json em uma string json
+                });
+                if (response.ok){
+                    alert('Cadastro bem-sucedido');
+                    window.location.href = '/login'
+                }else {
+                    const errorMessage = await response.text(); // Lê mensagem de erro
+                    alert(errorMessage); // Exibe mensagem de alert
+                }
+            } catch (error) {
+                alert ('Erro na comunicação com o server');
+                console.error('Erro:', error);
+            }
+        });
+</script>
 
 </html>
